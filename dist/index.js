@@ -16,14 +16,15 @@ var __asyncValues = (this && this.__asyncValues) || function (o) {
 };
 import { setInterval } from "timers/promises";
 import { JsonRpcProvider, formatEther } from "ethers";
-import Notifier from "node-notifier";
+import notifier from "node-notifier";
 import open from "open";
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         var _a, e_1, _b, _c;
         const url = 'https://mainnet.base.org';
         const provider = new JsonRpcProvider(url);
-        const addresses = ["0x8F479195645BEBD3b108B6062D0810B90123eb70"];
+        // BASE ADDRESSES TO WATCH GO HERE
+        const addresses = ["0x41A527ea80f71B47CcD3B0c834604854DD431F64"];
         console.log("Monitoring balance of addresses:", addresses);
         // get initial balances of addresses
         const initialBalances = {};
@@ -45,14 +46,12 @@ function main() {
                     const prettyBalance = formatEther(balance);
                     console.log(`Address: ${address}, Balance: ${prettyBalance.toString()} ETH`);
                     if (initialBalances[address] == balance) {
-                        Notifier.notify({
-                            title: "Balance Changed",
+                        notifier.notify({
                             message: `Balance for ${address} has changed to ${prettyBalance.toString()} ETH`,
-                            sound: "default",
-                            timeout: 5000,
-                            wait: true,
-                            icon: "path/to/icon.png"
-                        }, () => open(`https://basescan.org/address/${address}`));
+                        }, () => {
+                            // remove this if you don't want to open the browser
+                            open(`https://basescan.org/address/${address}`);
+                        });
                     }
                     else {
                         console.log(`Balance for ${address} has not changed.`);
